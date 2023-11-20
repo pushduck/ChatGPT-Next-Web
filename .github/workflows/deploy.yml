@@ -20,11 +20,48 @@ jobs:
         PORT: ${{ secrets.VPS_PORT }}
         KEY: ${{ secrets.VPS_SSHKEY }}
         script: |
-          docker pull durianice/chat-next-web:latest
-          docker stop chat-next-web
-          docker rm chat-next-web
-          docker run -d -p 3000:3000 \
-            -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
-            -e CODE=${{ secrets.WEB_PWD }} \
-            --name chat-next-web \
-            durianice/chat-next-web
+          # Check if Docker is installed
+          if ! command -v docker &> /dev/null; then
+            echo "Error: Docker is not installed. Exiting..."
+            exit 1
+          else
+            echo "Docker is installed."
+            docker --version
+          fi
+
+          # Check if Docker Compose is installed
+          if ! command -v docker-compose &> /dev/null; then
+            echo "Error: Docker Compose is not installed. Exiting..."
+            exit 1
+          else
+            echo "Docker Compose is installed."
+            docker-compose --version
+          fi
+
+          workdir=/opt/ChatGPT-Next-Web-Temp
+          if [ ! -d "$workdir" ]; then
+              mkdir $workdir
+          fi
+          cd $workdir
+          wget -O docker-compose.yml https://raw.githubusercontent.com/durianice/ChatGPT-Next-Web/main/docker-compose.yml
+          if ! [[ -e docker-compose.yml ]]; then
+            echo "docker-compose.yml does not exist."
+            rm -r $workdir
+            exit 1
+          fi
+          
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env
+          echo "CODE=${{ secrets.WEB_PWD }}" >> .env
+          echo "PROXY_URL=${{ env.PROXY_URL }}" >> .env
+          echo "BASE_URL=${{ env.BASE_URL }}" >> .env
+          echo "OPENAI_ORG_ID=${{ env.OPENAI_ORG_ID }}" >> .env
+          echo "HIDE_USER_API_KEY=${{ env.HIDE_USER_API_KEY }}" >> .env
+          echo "DISABLE_GPT4=${{ env.DISABLE_GPT4 }}" >> .env
+          echo "ENABLE_BALANCE_QUERY=${{ env.ENABLE_BALANCE_QUERY }}" >> .env
+          echo "DISABLE_FAST_LINK=${{ env.DISABLE_FAST_LINK }}" >> .env
+          echo "OPENAI_SB=${{ env.OPENAI_SB }}" >> .env
+
+          docker-compose --profile no-proxy pull
+          docker-compose --profile no-proxy up -d
+          docker image prune -f
+          rm -r $workdir

@@ -28,7 +28,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: durianice/chat-next-web
+          images: durianice/chatgpt-next-web
           tags: |
             type=raw,value=latest
             type=ref,event=tag
