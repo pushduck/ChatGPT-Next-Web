@@ -60,6 +60,8 @@ jobs:
           echo "ENABLE_BALANCE_QUERY=${{ vars.ENABLE_BALANCE_QUERY }}" >> .env
           echo "DISABLE_FAST_LINK=${{ vars.DISABLE_FAST_LINK }}" >> .env
           echo "OPENAI_SB=${{ vars.OPENAI_SB }}" >> .env
+          echo "CUSTOM_MODELS=${{ vars.CUSTOM_MODELS }}" >> .env
+          echo "DISABLE_FAST_LINK=${{ vars.DISABLE_FAST_LINK }}" >> .env
 
           docker-compose --profile no-proxy pull
           docker-compose --profile no-proxy up -d
