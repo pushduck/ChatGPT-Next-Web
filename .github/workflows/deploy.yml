@@ -52,14 +52,14 @@ jobs:
           
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env
           echo "CODE=${{ secrets.WEB_PWD }}" >> .env
-          echo "PROXY_URL=${{ env.PROXY_URL }}" >> .env
-          echo "BASE_URL=${{ env.BASE_URL }}" >> .env
-          echo "OPENAI_ORG_ID=${{ env.OPENAI_ORG_ID }}" >> .env
-          echo "HIDE_USER_API_KEY=${{ env.HIDE_USER_API_KEY }}" >> .env
-          echo "DISABLE_GPT4=${{ env.DISABLE_GPT4 }}" >> .env
-          echo "ENABLE_BALANCE_QUERY=${{ env.ENABLE_BALANCE_QUERY }}" >> .env
-          echo "DISABLE_FAST_LINK=${{ env.DISABLE_FAST_LINK }}" >> .env
-          echo "OPENAI_SB=${{ env.OPENAI_SB }}" >> .env
+          echo "PROXY_URL=${{ vars.PROXY_URL }}" >> .env
+          echo "BASE_URL=${{ vars.BASE_URL }}" >> .env
+          echo "OPENAI_ORG_ID=${{ vars.OPENAI_ORG_ID }}" >> .env
+          echo "HIDE_USER_API_KEY=${{ vars.HIDE_USER_API_KEY }}" >> .env
+          echo "DISABLE_GPT4=${{ vars.DISABLE_GPT4 }}" >> .env
+          echo "ENABLE_BALANCE_QUERY=${{ vars.ENABLE_BALANCE_QUERY }}" >> .env
+          echo "DISABLE_FAST_LINK=${{ vars.DISABLE_FAST_LINK }}" >> .env
+          echo "OPENAI_SB=${{ vars.OPENAI_SB }}" >> .env
 
           docker-compose --profile no-proxy pull
           docker-compose --profile no-proxy up -d
