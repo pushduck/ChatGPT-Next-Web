@@ -17,7 +17,6 @@ services:
       - DISABLE_FAST_LINK=$DISABLE_FAST_LINK
       - OPENAI_SB=$OPENAI_SB
       - CUSTOM_MODELS=$CUSTOM_MODELS
-      - DISABLE_FAST_LINK=$DISABLE_FAST_LINK
 
   chatgpt-next-web-proxy:
     profiles: ["proxy"]
@@ -37,4 +36,3 @@ services:
       - DISABLE_FAST_LINK=$DISABLE_FAST_LINK
       - OPENAI_SB=$OPENAI_SB
       - CUSTOM_MODELS=$CUSTOM_MODELS
-      - DISABLE_FAST_LINK=$DISABLE_FAST_LINK
