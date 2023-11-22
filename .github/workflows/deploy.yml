@@ -46,7 +46,7 @@ jobs:
           wget -O docker-compose.yml https://raw.githubusercontent.com/durianice/ChatGPT-Next-Web/main/docker-compose.yml
           if ! [[ -e docker-compose.yml ]]; then
             echo "docker-compose.yml does not exist."
-            rm -r $workdir
+            # rm -r $workdir
             exit 1
           fi
           
@@ -65,5 +65,5 @@ jobs:
 
           docker-compose --profile no-proxy pull
           docker-compose --profile no-proxy up -d
-          docker image prune -f
-          rm -r $workdir
+          # docker image prune -f
+          # rm -r $workdir
