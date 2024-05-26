@@ -30,6 +30,8 @@ import { getClientConfig } from "../config/client";
 import { ClientApi } from "../client/api";
 import { useAccessStore } from "../store";
 import { identifyDefaultClaudeModel } from "../utils/checkers";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import Login from "../(page)/login/page";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -135,6 +137,11 @@ function Screen() {
   useEffect(() => {
     loadAsyncGoogleFont();
   }, []);
+
+  const { user, error, isLoading } = useUser();
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
+  if (!user) return <Login />;
 
   return (
     <div

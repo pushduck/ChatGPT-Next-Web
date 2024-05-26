@@ -261,6 +261,15 @@ function DangerItems() {
           type="danger"
         />
       </ListItem>
+      <ListItem title={"Logout"}>
+        <IconButton
+          text={"Logut"}
+          onClick={async () => {
+            window.location.href = "/api/auth/logout";
+          }}
+          type="danger"
+        />
+      </ListItem>
     </List>
   );
 }
