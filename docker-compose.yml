@@ -4,6 +4,8 @@ services:
     profiles: [ "no-proxy" ]
     container_name: chatgpt-next-web
     image: durianice/chatgpt-next-web
+    volumes:
+      - next_chat_upload:/app/uploads
     ports:
       - 3000:3000
     environment:
@@ -23,6 +25,8 @@ services:
     profiles: [ "proxy" ]
     container_name: chatgpt-next-web-proxy
     image: durianice/chatgpt-next-web
+    volumes:
+      - next_chat_upload:/app/uploads
     ports:
       - 3000:3000
     environment:
@@ -38,3 +42,6 @@ services:
       - DISABLE_FAST_LINK=$DISABLE_FAST_LINK
       - OPENAI_SB=$OPENAI_SB
       - CUSTOM_MODELS=$CUSTOM_MODELS
+
+volumes:
+   next_chat_upload:

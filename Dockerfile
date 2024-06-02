@@ -18,6 +18,7 @@ RUN apk update && apk add --no-cache git
 ENV OPENAI_API_KEY=""
 ENV GOOGLE_API_KEY=""
 ENV CODE=""
+ENV NEXT_PUBLIC_ENABLE_NODEJS_PLUGIN=1
 
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -43,7 +44,7 @@ COPY --from=builder /app/.next/server ./.next/server
 EXPOSE 3000
 
 CMD if [ -n "$PROXY_URL" ]; then \
-    export HOSTNAME="127.0.0.1"; \
+    unset HOSTNAME; \
     protocol=$(echo $PROXY_URL | cut -d: -f1); \
     host=$(echo $PROXY_URL | cut -d/ -f3 | cut -d: -f1); \
     port=$(echo $PROXY_URL | cut -d: -f3); \

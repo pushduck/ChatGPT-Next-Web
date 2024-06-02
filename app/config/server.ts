@@ -24,7 +24,7 @@ declare global {
       DEFAULT_MODEL?: string; // to cnntrol default model in every new chat window
 
       // azure only
-      AZURE_URL?: string; // https://{azure-url}/openai/deployments/{deploy-name}
+      AZURE_URL?: string; // https://{azure-url}/openai/deployments
       AZURE_API_KEY?: string;
       AZURE_API_VERSION?: string;
 
@@ -139,6 +139,19 @@ export const getServerSideConfig = () => {
     disableFastLink: !!process.env.DISABLE_FAST_LINK,
     customModels,
     defaultModel,
+    isStoreFileToLocal:
+      !!process.env.NEXT_PUBLIC_ENABLE_NODEJS_PLUGIN &&
+      !process.env.R2_ACCOUNT_ID &&
+      !process.env.S3_ENDPOINT,
+
+    isEnableRAG: !!process.env.ENABLE_RAG,
+    ragEmbeddingModel:
+      process.env.RAG_EMBEDDING_MODEL ?? "text-embedding-3-large",
+    ragChunkSize: process.env.RAG_CHUNK_SIZE ?? "2000",
+    ragChunkOverlap: process.env.RAG_CHUNK_OVERLAP ?? "200",
+    ragReturnCount: process.env.RAG_RETURN_COUNT ?? "4",
     allowedWebDevEndpoints,
+
+    edgeTTSVoiceName: process.env.EDGE_TTS_VOICE_NAME ?? "zh-CN-YunxiNeural",
   };
 };

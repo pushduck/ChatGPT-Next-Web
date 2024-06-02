@@ -1,5 +1,15 @@
 import { Google, REQUEST_TIMEOUT_MS } from "@/app/constant";
-import { ChatOptions, getHeaders, LLMApi, LLMModel, LLMUsage } from "../api";
+import {
+  AgentChatOptions,
+  ChatOptions,
+  CreateRAGStoreOptions,
+  getHeaders,
+  LLMApi,
+  LLMModel,
+  LLMUsage,
+  SpeechOptions,
+  TranscriptionOptions,
+} from "../api";
 import { useAccessStore, useAppConfig, useChatStore } from "@/app/store";
 import { getClientConfig } from "@/app/config/client";
 import { DEFAULT_API_HOST } from "@/app/constant";
@@ -10,6 +20,18 @@ import {
 } from "@/app/utils";
 
 export class GeminiProApi implements LLMApi {
+  createRAGStore(options: CreateRAGStoreOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  transcription(options: TranscriptionOptions): Promise<string> {
+    throw new Error("Method not implemented.");
+  }
+  speech(options: SpeechOptions): Promise<ArrayBuffer> {
+    throw new Error("Method not implemented.");
+  }
+  toolAgentChat(options: AgentChatOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
   extractMessage(res: any) {
     console.log("[Response] gemini-pro response: ", res);
 
@@ -120,7 +142,9 @@ export class GeminiProApi implements LLMApi {
 
       if (!baseUrl) {
         baseUrl = isApp
-          ? DEFAULT_API_HOST + "/api/proxy/google/" + Google.ChatPath(modelConfig.model)
+          ? DEFAULT_API_HOST +
+            "/api/proxy/google/" +
+            Google.ChatPath(modelConfig.model)
           : this.path(Google.ChatPath(modelConfig.model));
       }
 
@@ -139,7 +163,7 @@ export class GeminiProApi implements LLMApi {
         () => controller.abort(),
         REQUEST_TIMEOUT_MS,
       );
-      
+
       if (shouldStream) {
         let responseText = "";
         let remainText = "";
@@ -238,11 +262,14 @@ export class GeminiProApi implements LLMApi {
           })
           .catch((error) => {
             console.error("Error:", error);
+            options.onError?.(error as Error);
           });
       } else {
         const res = await fetch(baseUrl, chatPayload);
         clearTimeout(requestTimeoutId);
+
         const resJson = await res.json();
+
         if (resJson?.promptFeedback?.blockReason) {
           // being blocked
           options.onError?.(

@@ -44,3 +44,8 @@ dev
 
 *.key
 *.key.pub
+
+/uploads
+.vercel
+
+certificates

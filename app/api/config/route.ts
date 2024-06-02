@@ -13,7 +13,9 @@ const DANGER_CONFIG = {
   hideBalanceQuery: serverConfig.hideBalanceQuery,
   disableFastLink: serverConfig.disableFastLink,
   customModels: serverConfig.customModels,
+  isEnableRAG: serverConfig.isEnableRAG,
   defaultModel: serverConfig.defaultModel,
+  edgeTTSVoiceName: serverConfig.edgeTTSVoiceName,
 };
 
 declare global {

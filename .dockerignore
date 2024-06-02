@@ -95,3 +95,6 @@ Thumbs.db
 # secret key
 *.key
 *.key.pub
+
+# upload files
+/uploads

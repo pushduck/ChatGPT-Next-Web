@@ -474,7 +474,9 @@ export function ImagePreviewer(props: {
     const isApp = getClientConfig()?.isApp;
 
     try {
-      const blob = await toPng(dom);
+      const blob = await toPng(dom, {
+        includeQueryParams: true,
+      });
       if (!blob) return;
 
       if (isMobile || (isApp && window.__TAURI__)) {
@@ -522,6 +524,18 @@ export function ImagePreviewer(props: {
     if (dom) {
       dom.innerHTML = dom.innerHTML; // Refresh the content of the preview by resetting its HTML for fix a bug glitching
     }
+  };
+
+  const markdownImageUrlCorsProcess = (markdownContent: string) => {
+    const updatedContent = markdownContent.replace(
+      /!\[.*?\]\((.*?)\)/g,
+      (match, url) => {
+        if (!url.startsWith("http")) return `![image](${url})`;
+        const updatedURL = `/api/cors?url=${encodeURIComponent(url)}`;
+        return `![image](${updatedURL})`;
+      },
+    );
+    return updatedContent;
   };
 
   return (
