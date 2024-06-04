@@ -70,7 +70,7 @@ async function authenticationGateway(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/api"],
+  matcher: ["/", "/api", "/auth/login"],
   // matcher: [
   //   "/((?!error|_next/static|_next/image|favicon.ico|robots.txt|images$).*)",
   // ],
