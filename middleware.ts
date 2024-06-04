@@ -11,15 +11,27 @@ export async function middleware(request: NextRequest) {
   return await authenticationGateway(request);
 }
 
-async function auth(session: string) {
-  const res = await fetch(SSO_AUTH_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ session }),
-  });
-  return await res.json();
+async function auth(request: NextRequest, session: string) {
+  const cookies = request.headers.get('cookie') || '';
+  try {
+    const res = await fetch(SSO_AUTH_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Cookie": cookies,
+      },
+      body: JSON.stringify({ session }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`API response status: ${res.status}`);
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error('Error in auth function:', error);
+    throw error;
+  }
 }
 
 async function loginCallback(request: NextRequest) {
@@ -50,21 +62,22 @@ async function authenticationGateway(request: NextRequest) {
     if (!cookie) {
       return NextResponse.redirect(new URL(authURL, request.url));
     }
-    const user = await auth(cookie);
+    const token = await auth(request, cookie);
     const isApiRequst = pathname.startsWith("/api");
     if (isApiRequst) {
-      if (user) {
+      if (token) {
         // audit ...
         return NextResponse.next();
       } else {
         return new NextResponse(null, { status: 401 });
       }
     } else {
-      return user
+      return token
         ? NextResponse.next()
         : NextResponse.redirect(new URL(authURL, request.url));
     }
   } catch (error) {
+    console.error('Error in authGatway:', error);
     return new NextResponse(null, { status: 500 });
   }
 }
