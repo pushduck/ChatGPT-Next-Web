@@ -12,13 +12,13 @@ export async function middleware(request: NextRequest) {
 }
 
 async function auth(request: NextRequest, session: string) {
-  const cookies = request.headers.get('cookie') || '';
+  const cookies = request.headers.get("cookie") || "";
   try {
     const res = await fetch(SSO_AUTH_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Cookie": cookies,
+        Cookie: cookies,
       },
       body: JSON.stringify({ session }),
     });
@@ -29,7 +29,7 @@ async function auth(request: NextRequest, session: string) {
 
     return await res.json();
   } catch (error) {
-    console.error('Error in auth function:', error);
+    console.error("Error in auth function:", error);
     throw error;
   }
 }
@@ -38,13 +38,15 @@ async function loginCallback(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl;
     const token = searchParams.get("token");
+    const t = searchParams.get("t");
+    const expires = t ? new Date(Number(t)) : undefined
     if (token) {
       const response = NextResponse.redirect(new URL("/", request.url));
       response.cookies.set({
         name: "__access__token",
         value: token,
         httpOnly: true,
-        expires: undefined,
+        expires,
       });
       return response;
     }
@@ -62,7 +64,7 @@ async function authenticationGateway(request: NextRequest) {
     if (!cookie) {
       return NextResponse.redirect(new URL(authURL, request.url));
     }
-    const token = await auth(request, cookie);
+    const { token } = await auth(request, cookie);
     const isApiRequst = pathname.startsWith("/api");
     if (isApiRequst) {
       if (token) {
@@ -77,7 +79,7 @@ async function authenticationGateway(request: NextRequest) {
         : NextResponse.redirect(new URL(authURL, request.url));
     }
   } catch (error) {
-    console.error('Error in authGatway:', error);
+    console.error("Error in authGatway:", error);
     return new NextResponse(null, { status: 500 });
   }
 }
