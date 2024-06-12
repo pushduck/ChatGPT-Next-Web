@@ -223,7 +223,8 @@ export class ChatGPTApi implements LLMApi {
               } catch {}
 
               if (res.status === 401) {
-                responseTexts.push(Locale.Error.Unauthorized);
+                // responseTexts.push(Locale.Error.Unauthorized);
+                responseTexts.push("登录失效，请刷新页面");
               }
 
               if (extraInfo) {
